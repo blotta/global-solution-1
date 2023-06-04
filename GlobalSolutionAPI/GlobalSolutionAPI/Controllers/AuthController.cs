@@ -68,6 +68,13 @@ namespace GlobalSolutionAPI.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Authorize(Roles = Roles.Admin)]
+        [Route("users")]
+        public async Task<IActionResult> GetUsers()
+        {
+            return Ok(await _authService.GetUsers());
+        }
 
         [HttpPost]
         [Authorize(Roles = Roles.Admin)]

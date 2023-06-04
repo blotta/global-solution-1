@@ -3,6 +3,7 @@ using GlobalSolutionAPI.Data.Dtos;
 using GlobalSolutionAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -128,6 +129,11 @@ namespace GlobalSolutionAPI.Services
                 return true;
 
             return false;
+        }
+
+        public async Task<IList<string>> GetUsers()
+        {
+            return await _userManager.Users.Select(u => $"{u.Id} - {u.Email}").ToListAsync();
         }
     }
 }

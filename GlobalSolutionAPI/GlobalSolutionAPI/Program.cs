@@ -15,9 +15,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
-    string connStr = builder.Configuration.GetConnectionString("Default");
-    options.UseMySql(connStr, ServerVersion.AutoDetect(connStr));
+    // string connStr = builder.Configuration.GetConnectionString("Default");
+    // var serverVersion = ServerVersion.Parse("8.0.21"); // ServerVersion.AutoDetect(connStr)
+    // options.UseMySql(connStr, serverVersion);
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>
@@ -38,6 +41,11 @@ builder.Services.AddAuthentication(options =>
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
+    var issuer = builder.Configuration.GetSection("Jwt:Issuer").Value;
+    var audience = builder.Configuration.GetSection("Jwt:Audience").Value;
+    Console.WriteLine($"Issuer from confing: {issuer}");
+    Console.WriteLine($"Audience from confing: {audience}");
+
     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
     {
         ValidateActor = true,
@@ -68,7 +76,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
 var app = builder.Build();
+
+var _logger = app.Services.GetService<ILogger<Program>>();
+
+var issuer = builder.Configuration.GetSection("Jwt:Issuer").Value;
+var audience = builder.Configuration.GetSection("Jwt:Audience").Value;
+_logger.LogError($"Issuer from config: {issuer}");
+_logger.LogError($"Audience from config: {audience}");
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

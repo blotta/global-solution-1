@@ -32,8 +32,7 @@ namespace GlobalSolutionAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var userId = (await _userManager.GetUserAsync(User)).Id;
-            var user = await _db.Users.Include(u => u.Addresses).FirstAsync(u => u.Id == userId);
+            var user = await _userService.GetUser(User);
             var resp = _mapper.Map<ProfileResponseDto>(user);
             return Ok(resp);
         }
@@ -82,6 +81,54 @@ namespace GlobalSolutionAPI.Controllers
             _db.SaveChanges();
 
             return Ok(_mapper.Map<AddressDto>(address));
+        }
+
+        [HttpPost]
+        [Route("order")]
+        public async Task<IActionResult> PlaceOrder(AddOrderRequestDto addOrderRequestDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userService.GetUser(User);
+            var address = user.Addresses.FirstOrDefault(address => address.Id == addOrderRequestDto.AddressId);
+            if (address == null)
+                return BadRequest("Endereço inválido");
+
+            if (addOrderRequestDto.ScheduledDate.Date <= DateTime.Today)
+                return BadRequest("Data inválida");
+
+            var order = _mapper.Map<Order>(addOrderRequestDto);
+            order.CreatedAt = DateTime.Now;
+            order.Status = OrderStatus.Created;
+            order.Address = address;
+
+            user.Orders.Add(order);
+            await _db.SaveChangesAsync();
+
+            await _db.Entry(order).ReloadAsync();
+
+            return Ok(_mapper.Map<OrderDto>(order));
+        }
+
+        [HttpDelete]
+        [Route("order/{orderId:int}")]
+        public async Task<IActionResult> CancelOrder([FromRoute] int orderId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userService.GetUser(User);
+
+            var order = user.Orders.FirstOrDefault(o => o.Id == orderId);
+            if (order == null)
+                return NotFound();
+
+            if (order.Status != OrderStatus.PickedUp)
+                order.Status = OrderStatus.Canceled;
+            await _db.SaveChangesAsync();
+
+            return Ok();
         }
     }
 }

@@ -22,7 +22,10 @@ namespace GlobalSolutionAPI.Services
         public async Task<ApplicationUser> GetUser(ClaimsPrincipal principal)
         {
             var userId = (await _userManager.GetUserAsync(principal)).Id;
-            var user = await _db.Users.Include(u => u.Addresses).FirstAsync(u => u.Id == userId);
+            var user = await _db.Users
+                .Include(u => u.Addresses)
+                .Include(u => u.Orders)
+                .FirstAsync(u => u.Id == userId);
             return user;
         }
 

@@ -8,7 +8,8 @@ namespace GlobalSolutionAPI.Profiles
     {
         public ApplicationUserProfile()
         {
-            CreateMap<ApplicationUser, ProfileResponseDto>();
+            CreateMap<ApplicationUser, ProfileResponseDto>()
+                .ForMember(u => u.Orders, s => s.MapFrom(e => e.Orders));
         }
 
     }

@@ -82,17 +82,11 @@ namespace GlobalSolutionAPI.Migrations
                     State = table.Column<string>(type: "TEXT", maxLength: 2, nullable: false),
                     Country = table.Column<string>(type: "TEXT", nullable: false),
                     ZipCode = table.Column<string>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true),
-                    ApplicationUserId = table.Column<string>(type: "TEXT", nullable: true)
+                    UserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Addresses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Addresses_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Addresses_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -185,10 +179,36 @@ namespace GlobalSolutionAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_Addresses_ApplicationUserId",
-                table: "Addresses",
-                column: "ApplicationUserId");
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AddressId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ScheduledDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PickedUpAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Orders_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Orders_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_UserId",
@@ -231,13 +251,20 @@ namespace GlobalSolutionAPI.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_AddressId",
+                table: "Orders",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_UserId",
+                table: "Orders",
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Addresses");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -254,7 +281,13 @@ namespace GlobalSolutionAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

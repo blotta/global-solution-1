@@ -11,5 +11,6 @@ namespace GlobalSolutionAPI.Models
         public string Name { get; set; }
 
         public ICollection<Address> Addresses { get; set; }
+        public ICollection<Order> Orders { get; set; }
     }
 }

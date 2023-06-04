@@ -21,21 +21,10 @@ namespace GlobalSolutionAPI.Contexts
             //     new IdentityRole(Constants.Roles.Manager)
             // );
 
-            builder.Entity<Address>()
-                .HasKey("Id")
-                ;
-
-            builder.Entity<Address>()
-                .HasOne(address => address.User)
-                ;
-
-            builder.Entity<ApplicationUser>()
-                .HasMany<Address>()
-                ;
-
         }
 
         public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }

@@ -20,7 +20,7 @@ namespace GlobalSolutionAPI.Models
         [Required]
         public string ZipCode { get; set; }
 
-        public ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; }
         public Address()
         {
         }

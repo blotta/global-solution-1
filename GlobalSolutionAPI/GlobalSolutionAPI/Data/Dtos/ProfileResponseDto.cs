@@ -6,5 +6,6 @@
         public string Email { get; set; }
 
         public IEnumerable<AddressDto> Addresses { get; set; }
+        public IEnumerable<OrderNestedDto> Orders { get; set; }
     }
 }

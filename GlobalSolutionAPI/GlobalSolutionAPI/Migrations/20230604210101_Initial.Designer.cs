@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GlobalSolutionAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230604193538_Initial")]
+    [Migration("20230604210101_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,9 +24,6 @@ namespace GlobalSolutionAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("City")
                         .IsRequired()
@@ -56,8 +53,6 @@ namespace GlobalSolutionAPI.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("UserId");
 
@@ -130,6 +125,43 @@ namespace GlobalSolutionAPI.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("GlobalSolutionAPI.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("AddressId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("PickedUpAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ScheduledDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -262,13 +294,28 @@ namespace GlobalSolutionAPI.Migrations
 
             modelBuilder.Entity("GlobalSolutionAPI.Models.Address", b =>
                 {
-                    b.HasOne("GlobalSolutionAPI.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("GlobalSolutionAPI.Models.ApplicationUser", "User")
                         .WithMany("Addresses")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GlobalSolutionAPI.Models.Order", b =>
+                {
+                    b.HasOne("GlobalSolutionAPI.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GlobalSolutionAPI.Models.ApplicationUser", "User")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Address");
 
                     b.Navigation("User");
                 });
@@ -327,6 +374,8 @@ namespace GlobalSolutionAPI.Migrations
             modelBuilder.Entity("GlobalSolutionAPI.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

@@ -67,8 +67,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("IsAdmin", policy => policy.RequireRole(Roles.Admin));
 });
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 // Application services
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 //
 builder.Services.AddControllers();

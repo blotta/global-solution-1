@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { createTheme } from '@mui/material/styles';
 import Signin from './pages/Signin';
 import { Route, Routes, useRoutes } from 'react-router-dom';
-import TestLoggedIn from './pages/TestLoggedin';
+import TestLoggedIn from './pages/TestLoggedIn';
 import SignUp from './pages/Signup';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/useAuth';

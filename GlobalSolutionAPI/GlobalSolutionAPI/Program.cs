@@ -91,8 +91,10 @@ var _logger = app.Services.GetService<ILogger<Program>>();
 
 var issuer = builder.Configuration.GetSection("Jwt:Issuer").Value;
 var audience = builder.Configuration.GetSection("Jwt:Audience").Value;
+var dbconn = builder.Configuration.GetConnectionString("DefaultConnection");
 _logger.LogError($"Issuer from config: {issuer}");
 _logger.LogError($"Audience from config: {audience}");
+_logger.LogError($"dbConnString from config: {dbconn}");
 
 using (var scope = app.Services.CreateScope())
 {
@@ -105,7 +107,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().AllowCredentials());
+    app.UseCors(c => c.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 }
 else
 {

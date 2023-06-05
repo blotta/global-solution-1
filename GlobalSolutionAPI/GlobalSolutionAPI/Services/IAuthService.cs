@@ -10,5 +10,6 @@ namespace GlobalSolutionAPI.Services
         Task<LoginUserResponseDto> Login(LoginUserRequestDto loginUserRequestDto);
         Task<bool> AddRole(Guid userId, string roleName);
         Task<IList<string>> GetUsers();
+        Task<IList<string>> GetUserRoles(ApplicationUser applicationUser);
     }
 }

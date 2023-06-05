@@ -9,7 +9,14 @@ namespace GlobalSolutionAPI.Profiles
         public ApplicationUserProfile()
         {
             CreateMap<ApplicationUser, ProfileResponseDto>()
-                .ForMember(u => u.Orders, s => s.MapFrom(e => e.Orders));
+                .ForMember(u => u.Orders, s => s.MapFrom(e => e.Orders))
+                ;
+
+            CreateMap<ApplicationUser, UserDto>()
+                // .ForMember(u => u.Roles, s => s.MapFrom(e => e.R))
+                ;
+
+            CreateMap<ApplicationUser, UserNestedDto>();
         }
 
     }

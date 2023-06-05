@@ -12,6 +12,7 @@ namespace GlobalSolutionAPI.Profiles
                 .ForMember(o => o.Name, s => s.MapFrom(e => e.User.Name));
 
             CreateMap<Order, OrderNestedDto>();
+            CreateMap<Order, OrderDetailedDto>();
 
             CreateMap<AddOrderRequestDto, Order>();
         }

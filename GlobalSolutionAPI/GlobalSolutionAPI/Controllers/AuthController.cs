@@ -1,8 +1,11 @@
-﻿using GlobalSolutionAPI.Constants;
+﻿using AutoMapper;
+using GlobalSolutionAPI.Constants;
+using GlobalSolutionAPI.Contexts;
 using GlobalSolutionAPI.Data.Dtos;
 using GlobalSolutionAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GlobalSolutionAPI.Controllers
 {
@@ -11,10 +14,14 @@ namespace GlobalSolutionAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly ApplicationDbContext _db;
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthService authService)
+        public AuthController(ApplicationDbContext applicationDbContext, IAuthService authService, IMapper mapper)
         {
             _authService = authService;
+            _db = applicationDbContext;
+            _mapper = mapper;
         }
         [HttpPost]
         [Route("register")]
@@ -73,7 +80,14 @@ namespace GlobalSolutionAPI.Controllers
         [Route("users")]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok(await _authService.GetUsers());
+            var users = await _db.Users.ToListAsync();
+            var usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
+            foreach (var user in users)
+            {
+                usersDto.First(u => u.Id == user.Id).Roles = await _authService.GetUserRoles(user);
+            }
+
+            return Ok(usersDto);
         }
 
         [HttpPost]
@@ -83,6 +97,17 @@ namespace GlobalSolutionAPI.Controllers
         {
 
             var result = await _authService.AddRole(userId, Roles.Admin);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = Roles.Admin)]
+        [Route("assign-manager/{userId:guid}")]
+        public async Task<IActionResult> AssignManager([FromRoute] Guid userId)
+        {
+
+            var result = await _authService.AddRole(userId, Roles.Manager);
 
             return Ok(result);
         }

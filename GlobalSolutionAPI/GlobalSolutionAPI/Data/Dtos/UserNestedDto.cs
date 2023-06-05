@@ -1,10 +1,9 @@
 ﻿namespace GlobalSolutionAPI.Data.Dtos
 {
-    public class UserDto
+    public class UserNestedDto
     {
         public string Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public IList<string> Roles { get; set; }
     }
 }

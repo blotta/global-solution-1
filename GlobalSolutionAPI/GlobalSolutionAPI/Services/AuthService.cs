@@ -131,6 +131,11 @@ namespace GlobalSolutionAPI.Services
             return false;
         }
 
+        public async Task<IList<string>> GetUserRoles(ApplicationUser applicationUser)
+        {
+            return await _userManager.GetRolesAsync(applicationUser);
+        }
+
         public async Task<IList<string>> GetUsers()
         {
             return await _userManager.Users.Select(u => $"{u.Id} - {u.Email}").ToListAsync();

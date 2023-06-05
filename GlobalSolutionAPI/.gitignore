@@ -5,6 +5,7 @@
 
 # CUSTOM
 appsettings.Development.json
+globalsolution.db*
 
 # User-specific files
 *.rsuser

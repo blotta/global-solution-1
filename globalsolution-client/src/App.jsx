@@ -9,6 +9,9 @@ import TestLoggedIn from './pages/TestLoggedIn';
 import SignUp from './pages/Signup';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/useAuth';
+import ProfileAddress from './pages/profile/ProfileAddress';
+import ProfileOrder from './pages/profile/ProfileOrder';
+import ProfileMain from './pages/profile/ProfileMain';
 
 
 const defaultTheme = createTheme();
@@ -40,7 +43,17 @@ function App() {
         <Route
           path="/"
           element={
-            <ProtectedRoute><TestLoggedIn /></ProtectedRoute>
+            <ProtectedRoute><ProfileMain /></ProtectedRoute>
+          } />
+        <Route
+          path="/address"
+          element={
+            <ProtectedRoute><ProfileAddress /></ProtectedRoute>
+          } />
+        <Route
+          path="/order"
+          element={
+            <ProtectedRoute><ProfileOrder /></ProtectedRoute>
           } />
       </Routes>
     </AuthProvider>

@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import { useAuth } from "../hooks/useAuth";
+import Header from "../components/Header";
 
 export default function TestLoggedIn() {
   const {logout} = useAuth();
@@ -8,6 +9,7 @@ export default function TestLoggedIn() {
   }
   return(
     <div>
+      <Header />
       <p>
       You are logged in!
       </p>

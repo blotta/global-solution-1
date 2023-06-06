@@ -110,7 +110,10 @@ namespace GlobalSolutionAPI.Services
             claims.Add(new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString()));
 
             foreach (var role in roles)
+            {
                 claims.Add(new Claim(ClaimTypes.Role, role));
+                claims.Add(new Claim("roles", role));
+            }
 
             return claims;
         }

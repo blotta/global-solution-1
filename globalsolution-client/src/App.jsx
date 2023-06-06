@@ -12,6 +12,8 @@ import { AuthProvider } from './hooks/useAuth';
 import ProfileAddress from './pages/profile/ProfileAddress';
 import ProfileOrder from './pages/profile/ProfileOrder';
 import ProfileMain from './pages/profile/ProfileMain';
+import { ProtectedManagerRoute } from './components/ProtectedManagerRoute';
+import OrderManagement from './pages/OrderManagement';
 
 
 const defaultTheme = createTheme();
@@ -54,6 +56,11 @@ function App() {
           path="/order"
           element={
             <ProtectedRoute><ProfileOrder /></ProtectedRoute>
+          } />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedManagerRoute><OrderManagement /></ProtectedManagerRoute>
           } />
       </Routes>
     </AuthProvider>

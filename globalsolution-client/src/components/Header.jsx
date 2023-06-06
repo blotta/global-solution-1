@@ -23,9 +23,13 @@ const pageRoutes = [
   { label: 'Novo Endereço', path: "/address"},
   { label: 'Novo Pedido', path: "/order"}
 ];
+const pageManagerRoutes = [
+  { label: 'Pedidos', path: "/orders"},
+  // { label: 'Novo Pedido', path: "/order"}
+];
 const settings = ['Logout'];
 
-function ResponsiveAppBar() {
+function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -44,7 +48,7 @@ function ResponsiveAppBar() {
     setAnchorElUser(null);
   };
 
-  const {logout} = useAuth();
+  const {logout, isManager, user} = useAuth();
   const handleLogout = () => {
     logout();
   }
@@ -106,6 +110,12 @@ function ResponsiveAppBar() {
                   <Link component={RouterLink} style={{ textDecoration: "none", color: "inherit" }} to={route.path}>{route.label}</Link>
                 </MenuItem>
               ))}
+
+              {isManager && pageManagerRoutes.map((route) => (
+                <MenuItem key={route.label} onClick={handleCloseNavMenu}>
+                  <Link component={RouterLink} style={{ textDecoration: "none", color: "inherit" }} to={route.path}>{route.label}</Link>
+                </MenuItem>
+              ))}
             </Menu>
           </Box>
           <RecyclingIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -139,19 +149,31 @@ function ResponsiveAppBar() {
                 {route.label}
               </Button>
             ))}
+
+            {isManager && pageManagerRoutes.map((route) => (
+              <Button
+                component={RouterLink}
+                to={route.path}
+                key={route.label}
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {route.label}
+              </Button>
+            ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Typography mr={1}>
-              lucas@example
+              {user.email}
             </Typography>
 
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Lucas Blotta">
+            <Tooltip title={user.name}>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Lucas Blotta" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={user.name} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -185,4 +207,4 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
-export default ResponsiveAppBar;
+export default Header;

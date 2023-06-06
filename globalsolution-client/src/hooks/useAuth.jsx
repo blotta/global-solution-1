@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import authService from '../services/auth.service'
@@ -8,7 +8,24 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("user", null);
   const [token, setToken] = useLocalStorage("token", null);
+  const [isManager, setIsManager] = useLocalStorage("isManager", false);
   const navigate = useNavigate();
+
+  const checkManager = (roles) => {
+    console.log("checkManager", roles);
+    if (!roles) return false;
+
+    let _roles;
+
+    if (typeof roles == "string") {
+      _roles = [roles]
+    } else {
+      _roles = [...roles];
+    }
+    console.log("_roles", _roles);
+
+    return _roles.filter(r => ["Admin", "Manager"].includes(r)).length > 0;
+  }
 
   const signup = async (name, email, password) => {
     const result = await authService.signupEmailPassword(name, email, password);
@@ -30,7 +47,8 @@ export const AuthProvider = ({ children }) => {
     }
     setUser(result.user);
     setToken(result.token);
-    console.log('logging in from useAuth');
+    setIsManager(checkManager(result.user.roles));
+    console.log('logging in from useAuth. Manager', result.user, checkManager(result.user.roles));
     navigate("/");
   };
 
@@ -38,6 +56,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
+    setIsManager(false);
     navigate("/signin", { replace: true });
   };
 
@@ -45,6 +64,7 @@ export const AuthProvider = ({ children }) => {
     () => ({
       user,
       token,
+      isManager,
       signup,
       login,
       logout

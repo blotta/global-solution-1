@@ -93,7 +93,7 @@ export default function ProfileOrder() {
             }}
           />
           <Button type="submit" variant="contained" color="primary">
-            Add Order
+            Enviar
           </Button>
 
 
@@ -102,56 +102,3 @@ export default function ProfileOrder() {
     </div>
   )
 }
-
-
-const AddOrderForm = ({ addresses, onAddOrder }) => {
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Address</InputLabel>
-        <Select
-          name="addressId"
-          value={orderData.addressId}
-          onChange={handleChange}
-          required
-        >
-          {addresses.map((address) => (
-            <MenuItem key={address.id} value={address.id}>
-              {address.street}, {address.city}, {address.country}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl fullWidth margin="normal">
-        <InputLabel>Type</InputLabel>
-        <Select
-          name="type"
-          value={orderData.type}
-          onChange={handleChange}
-          required
-        >
-          <MenuItem value="type1">Type 1</MenuItem>
-          <MenuItem value="type2">Type 2</MenuItem>
-          <MenuItem value="type3">Type 3</MenuItem>
-        </Select>
-      </FormControl>
-      <TextField
-        name="scheduledDate"
-        label="Scheduled Date"
-        type="date"
-        value={orderData.scheduledDate}
-        onChange={handleChange}
-        required
-        fullWidth
-        margin="normal"
-        InputLabelProps={{
-          shrink: true,
-        }}
-      />
-      <Button type="submit" variant="contained" color="primary">
-        Add Order
-      </Button>
-    </form>
-  );
-};

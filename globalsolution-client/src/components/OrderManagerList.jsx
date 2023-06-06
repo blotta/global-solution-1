@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { DataGrid, GridActionsCellItem, GridDeleteIcon } from '@mui/x-data-grid';
-import { CancelOutlined } from '@mui/icons-material';
+import { CancelOutlined, CheckBox, CheckBoxOutlineBlank, PunchClockOutlined } from '@mui/icons-material';
 
 
-export default function OrderList({ orders, deleteOrder }) {
+export default function OrderManagerList({ orders, scheduleOrder, pickupOrder, deleteOrder }) {
 
   const columns = [
     { field: 'type', headerName: 'Tipo', width: 130 },
@@ -45,6 +45,15 @@ export default function OrderList({ orders, deleteOrder }) {
       }
     },
     {
+      field: 'user',
+      headerName: 'Usuário',
+      width: 160,
+      valueGetter: (params) => {
+        if (params.row.user == null) return "Excluído";
+        return `${params.row.user.name || 'Desconhecido'}`;
+      }
+    },
+    {
       field: 'status',
       headerName: 'Status',
       width: 130
@@ -54,17 +63,39 @@ export default function OrderList({ orders, deleteOrder }) {
       type: 'actions',
       headername: "Ações",
       getActions: (params) => {
-        if (["Created"].includes(params.row.status)) {
-          return [
+        const ret = []
 
+        if (["Created", "Scheduled"].includes(params.row.status)) {
+          ret.push(
             <GridActionsCellItem
               icon={<CancelOutlined />}
               label="Cancelar"
               onClick={() => {handleCancelOrder(params.row.id)}}
             />
-          ]
+          )
         }
-        return [];
+
+        if (["Created"].includes(params.row.status)) {
+          ret.push(
+            <GridActionsCellItem
+              icon={<PunchClockOutlined />}
+              label="Confirmar Agendamento"
+              onClick={() => {handleScheduleOrder(params.row.id)}}
+            />
+          )
+        }
+
+        if (["Scheduled"].includes(params.row.status)) {
+          ret.push(
+            <GridActionsCellItem
+              icon={<CheckBox />}
+              label="Marcar como buscado"
+              onClick={() => {handlePickupOrder(params.row.id)}}
+            />
+          )
+        }
+
+        return ret;
       }
     }
   ];
@@ -73,6 +104,17 @@ export default function OrderList({ orders, deleteOrder }) {
     console.log('canceling order', id);
     deleteOrder(id)
   }
+
+  const handleScheduleOrder = (id) => {
+    console.log("scheduling order ", id);
+    scheduleOrder(id);
+  }
+
+  const handlePickupOrder = (id) => {
+    console.log("pickedup order ", id);
+    pickupOrder(id);
+  }
+
 
   return (
     <div style={{ height: 400, width: '100%' }}>

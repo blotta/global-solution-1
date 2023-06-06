@@ -114,7 +114,7 @@ export default function ProfileAddress() {
             margin="normal"
           />
           <Button type="submit" variant="contained" color="primary" disabled={loading}>
-            Add Address
+            Enviar
           </Button>
         </Box>
       </Container>

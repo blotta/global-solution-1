@@ -77,6 +77,10 @@ namespace GlobalSolutionAPI.Controllers
             if (address == null)
                 return NotFound();
 
+            if (_db.Orders.Include(o => o.Address)
+                .Any(o => o.Address.Id == addressId && (o.Status != OrderStatus.PickedUp && o.Status != OrderStatus.Canceled)))
+                return BadRequest("Endereço está em pedido  não finalizado");
+
             user.Addresses.Remove(address);
             _db.SaveChanges();
 

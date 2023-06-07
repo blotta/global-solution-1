@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Container } from '@mui/material';
 import Header from "../../components/Header"
 import useProfile from '../../hooks/useProfile';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +26,12 @@ export default function ProfileOrder() {
     const result = await addOrder(orderData);
     if (result != null) navigate("/");
   };
+
+  const minimumDate = () => {
+    let date = new Date();
+    date.setDate(date.getDate() + 1);
+    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+  }
 
   if (loading) {
     return (
@@ -62,7 +67,7 @@ export default function ProfileOrder() {
             >
               {profile.addresses.map((address) => (
                 <MenuItem key={address.id} value={address.id}>
-                  {address.street}, {address.city}, {address.country}
+                  {address.street} {address.number}, {address.city} - {address.state}
                 </MenuItem>
               ))}
             </Select>
@@ -79,19 +84,28 @@ export default function ProfileOrder() {
               <MenuItem value="recyclable">Reciclável</MenuItem>
             </Select>
           </FormControl>
-          <TextField
-            name="scheduledDate"
-            label="Data Para Buscar"
-            type="date"
-            value={orderData.scheduledDate}
-            onChange={handleChange}
-            required
-            fullWidth
-            margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+
+          <FormControl fullWidth margin='normal'>
+
+            <TextField
+              name="scheduledDate"
+              label="Data Para Coleta"
+              type="date"
+              value={orderData.scheduledDate}
+              onChange={handleChange}
+              required
+              fullWidth
+              margin="normal"
+              InputProps={{
+                inputProps: {
+                min: minimumDate()
+                }
+              }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </FormControl>
           <Button type="submit" variant="contained" color="primary">
             Enviar
           </Button>

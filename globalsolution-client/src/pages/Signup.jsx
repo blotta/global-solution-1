@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -16,6 +14,7 @@ import Copyright from '../components/Copyright';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useState } from 'react';
+import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 
 
 const defaultTheme = createTheme();
@@ -26,6 +25,7 @@ export default function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,7 +51,7 @@ export default function SignUp() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Cadastro
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -85,13 +85,29 @@ export default function SignUp() {
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Senha"
                   type="password"
                   id="password"
                   autoComplete="new-password"
                   value={password}
                   onChange={(e) => {setPassword(e.target.value)}}
                 />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  error={password != passwordConfirm}
+                  label="Confirmação de Senha"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                  value={passwordConfirm}
+                  onChange={(e) => {setPasswordConfirm(e.target.value)}}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <PasswordStrengthMeter password={password}/>
               </Grid>
             </Grid>
             <Button
@@ -100,12 +116,12 @@ export default function SignUp() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              Registrar
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/signin" variant="body2">
-                  Already have an account? Sign in
+                  Já possui uma conta? Login
                 </Link>
               </Grid>
             </Grid>

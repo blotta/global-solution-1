@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import { TextField, Button } from '@material-ui/core';
 import Header from "../../components/Header"
 import { Box, Button, Container, FormControl, TextField, Typography } from '@mui/material';
 import useProfile from '../../hooks/useProfile';
@@ -15,7 +14,7 @@ export default function ProfileAddress() {
     number: '',
     city: 'São Paulo',
     state: 'SP',
-    country: 'Brazil',
+    country: 'Brasil',
     zipcode: '04783-100',
   });
 
@@ -30,14 +29,6 @@ export default function ProfileAddress() {
     e.preventDefault();
     const success = await addAddress(addressData);
     if (success) navigate("/");
-    // setAddressData({
-    //   street: '',
-    //   number: '',
-    //   city: '',
-    //   state: '',
-    //   country: '',
-    //   zipcode: '',
-    // });
   };
 
   return (
@@ -50,10 +41,6 @@ export default function ProfileAddress() {
         <Box
           component="form"
           onSubmit={handleSubmit}
-          // sx={{
-          //   '& .MuiTextField-root': { m: 1, width: '25ch' },
-          // }}
-          // noValidate
           autoComplete="off"
         >
 

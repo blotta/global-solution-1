@@ -1,12 +1,27 @@
 import * as React from 'react';
 import { DataGrid, GridActionsCellItem, GridDeleteIcon } from '@mui/x-data-grid';
 import { CancelOutlined } from '@mui/icons-material';
+import OrderTypeIcon from './OrderTypeIcon';
+import { orderStatusEnumToWord, orderTypeEnumToWord } from '../utils/orderUtils';
+import { Box, Tooltip } from '@mui/material';
 
 
 export default function OrderList({ orders, deleteOrder }) {
 
   const columns = [
-    { field: 'type', headerName: 'Tipo', width: 130 },
+    {
+      field: 'type',
+      headerName: 'Tipo',
+      width: 70,
+      sortable: false,
+      renderCell: (params) => (
+        <Tooltip title={orderTypeEnumToWord(params.row.type)}>
+          <Box>
+            <OrderTypeIcon type={params.row.type} />
+          </Box>
+        </Tooltip>
+      )
+    },
     {
       field: 'createdAt',
       headerName: 'Criado',
@@ -38,7 +53,7 @@ export default function OrderList({ orders, deleteOrder }) {
       field: 'address',
       headerName: 'Endereço',
       sortable: false,
-      width: 160,
+      flex: 1,
       valueGetter: (params) => {
         if (params.row.address == null) return "Excluído";
         return `${params.row.address.street || ''} ${params.row.address.number?.toString() || ''} ${params.row.address.city || ''} - ${params.row.address.state || ''}`
@@ -47,7 +62,10 @@ export default function OrderList({ orders, deleteOrder }) {
     {
       field: 'status',
       headerName: 'Status',
-      width: 130
+      width: 130,
+      valueGetter: (params) => {
+        return orderStatusEnumToWord(params.row.status)
+      }
     },
     {
       field: 'actions',
@@ -60,7 +78,7 @@ export default function OrderList({ orders, deleteOrder }) {
             <GridActionsCellItem
               icon={<CancelOutlined />}
               label="Cancelar"
-              onClick={() => {handleCancelOrder(params.row.id)}}
+              onClick={() => { handleCancelOrder(params.row.id) }}
             />
           ]
         }

@@ -1,11 +1,7 @@
 import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
-// import './App.css'
 import { createTheme } from '@mui/material/styles';
 import Signin from './pages/Signin';
 import { Route, Routes, useRoutes } from 'react-router-dom';
-import TestLoggedIn from './pages/TestLoggedIn';
 import SignUp from './pages/Signup';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthProvider } from './hooks/useAuth';
@@ -19,22 +15,6 @@ import OrderManagement from './pages/OrderManagement';
 const defaultTheme = createTheme();
 
 function App() {
-  // const routes = useRoutes([
-  //   {
-  //     path: "/signin",
-  //     element: <Signin />
-  //   },
-  //   {
-  //     path: "/signup",
-  //     element: <SignUp />
-  //   },
-  //   {
-  //     path: "/",
-  //     element: <TestLoggedIn />
-  //   }
-  // ])
-  // return routes;
-
 
   return (
     <AuthProvider>

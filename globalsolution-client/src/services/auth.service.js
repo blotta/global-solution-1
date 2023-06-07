@@ -7,7 +7,6 @@ const signupEmailPassword = async (name, email, password) => {
     try
     {
         const response = await axios.post(API_URL + "/register", { name, username: email, password });
-        // console.log("Got server response", response);
         return true;
     } catch (error) {
         if (error.response) {
@@ -22,11 +21,9 @@ const signupEmailPassword = async (name, email, password) => {
 }
 
 const signinEmailPassword = async (email, password) => {
-    console.log("signinEmailPassword logging in at ", axios.defaults.baseURL + API_URL + "/login with", email, password);
     try
     {
         const response = await axios.post(API_URL + "/login", { username: email, password });
-        // console.log("Got server response", response);
         const user = jwtDecode(response.data.token)
         return {token: response.data.token, user: user};
     } catch (error) {

@@ -11,23 +11,18 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 import RecyclingIcon from '@mui/icons-material/Recycling';
-// import { Link } from '@mui/material/Link';
 import { Link as RouterLink} from 'react-router-dom'
 import { Link } from '@mui/material';
 import { useAuth } from '../hooks/useAuth';
 
-const pages = ['Novo Endereço', 'Novo Pedido'];
 const pageRoutes = [
   { label: 'Novo Endereço', path: "/address"},
   { label: 'Novo Pedido', path: "/order"}
 ];
 const pageManagerRoutes = [
   { label: 'Pedidos', path: "/orders"},
-  // { label: 'Novo Pedido', path: "/order"}
 ];
-const settings = ['Logout'];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -48,7 +43,7 @@ function Header() {
     setAnchorElUser(null);
   };
 
-  const {logout, isManager, user} = useAuth();
+  const {logout, managerCheck, user} = useAuth();
   const handleLogout = () => {
     logout();
   }
@@ -111,7 +106,7 @@ function Header() {
                 </MenuItem>
               ))}
 
-              {isManager && pageManagerRoutes.map((route) => (
+              {managerCheck && pageManagerRoutes.map((route) => (
                 <MenuItem key={route.label} onClick={handleCloseNavMenu}>
                   <Link component={RouterLink} style={{ textDecoration: "none", color: "inherit" }} to={route.path}>{route.label}</Link>
                 </MenuItem>
@@ -150,7 +145,7 @@ function Header() {
               </Button>
             ))}
 
-            {isManager && pageManagerRoutes.map((route) => (
+            {managerCheck && pageManagerRoutes.map((route) => (
               <Button
                 component={RouterLink}
                 to={route.path}
@@ -163,7 +158,7 @@ function Header() {
             ))}
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ display: { xs: 'none', md: 'flex'}, flexGrow: 0 }}>
             <Typography mr={1}>
               {user.email}
             </Typography>
@@ -195,11 +190,6 @@ function Header() {
               <MenuItem onClick={handleLogout}>
                 <Typography textAlign="center">Logout</Typography>
               </MenuItem>
-              {/* {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))} */}
             </Menu>
           </Box>
         </Toolbar>

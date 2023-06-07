@@ -1,17 +1,28 @@
 import * as React from 'react';
 import { DataGrid, GridActionsCellItem, GridDeleteIcon } from '@mui/x-data-grid';
 import { CancelOutlined, CheckBox, CheckBoxOutlineBlank, PunchClockOutlined } from '@mui/icons-material';
+import OrderTypeIcon from './OrderTypeIcon';
+import { orderStatusEnumToWord } from '../utils/orderUtils';
 
 
 export default function OrderManagerList({ orders, scheduleOrder, pickupOrder, deleteOrder }) {
 
   const columns = [
-    { field: 'type', headerName: 'Tipo', width: 130 },
+    {
+      field: 'type',
+      headerName: 'Tipo',
+      width: 70,
+      flex: 0,
+      renderCell: (params) => ( 
+        <OrderTypeIcon type={params.row.type} />
+       )
+    },
     {
       field: 'createdAt',
       headerName: 'Criado',
       type: 'date',
-      width: 90,
+      // width: 90,
+      flex: 0,
       valueGetter: (params) =>
         new Date(params.row.createdAt)
     },
@@ -19,7 +30,8 @@ export default function OrderManagerList({ orders, scheduleOrder, pickupOrder, d
       field: 'scheduledDate',
       headerName: 'Agendado',
       type: 'date',
-      width: 90,
+      // width: 90,
+      flex: 0,
       valueGetter: (params) =>
         new Date(params.row.scheduledDate)
     },
@@ -27,7 +39,8 @@ export default function OrderManagerList({ orders, scheduleOrder, pickupOrder, d
       field: 'pickedUpAt',
       headerName: 'Coletado',
       type: 'date',
-      width: 90,
+      // width: 90,
+      flex: 0,
       valueGetter: (params) => {
         if (params.row.pickedUpAt != null)
           return new Date(params.row.pickedUpAt)
@@ -38,7 +51,8 @@ export default function OrderManagerList({ orders, scheduleOrder, pickupOrder, d
       field: 'address',
       headerName: 'Endereço',
       sortable: false,
-      width: 160,
+      minWidth: 160,
+      flex: 1,
       valueGetter: (params) => {
         if (params.row.address == null) return "Excluído";
         return `${params.row.address.street || ''} ${params.row.address.number?.toString() || ''} ${params.row.address.city || ''} - ${params.row.address.state || ''}`
@@ -47,7 +61,8 @@ export default function OrderManagerList({ orders, scheduleOrder, pickupOrder, d
     {
       field: 'user',
       headerName: 'Usuário',
-      width: 160,
+      // width: 160,
+      flex: 0,
       valueGetter: (params) => {
         if (params.row.user == null) return "Excluído";
         return `${params.row.user.name || 'Desconhecido'}`;
@@ -56,7 +71,11 @@ export default function OrderManagerList({ orders, scheduleOrder, pickupOrder, d
     {
       field: 'status',
       headerName: 'Status',
-      width: 130
+      // width: 130,
+      flex: 0,
+      valueGetter: (params) => {
+        return orderStatusEnumToWord(params.row.status)
+      }
     },
     {
       field: 'actions',
@@ -117,16 +136,16 @@ export default function OrderManagerList({ orders, scheduleOrder, pickupOrder, d
 
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
+    <div style={{ width: '100%' }}>
       <DataGrid
         rows={orders}
         columns={columns}
         initialState={{
           pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
+            paginationModel: { page: 0, pageSize: 20 },
           },
         }}
-        pageSizeOptions={[5, 10]}
+        pageSizeOptions={[20, 100]}
       />
     </div>
   );

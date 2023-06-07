@@ -6,7 +6,6 @@ import OrderManagerList from "../components/OrderManagerList";
 
 export default function OrderManagement() {
   const { orders, scheduleOrder, pickupOrder, deleteOrder } = useOrders();
-  console.log(orders);
 
   return (
     <div>

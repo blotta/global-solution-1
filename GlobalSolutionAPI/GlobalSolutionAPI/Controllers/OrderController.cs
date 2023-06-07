@@ -106,7 +106,7 @@ namespace GlobalSolutionAPI.Controllers
             if (order == null)
                 return NotFound();
 
-            if (order.Status == Models.OrderStatus.PickedUp)
+            if (order.Status == Models.OrderStatus.PickedUp || order.Status == Models.OrderStatus.Canceled)
                 return BadRequest("Pedido já finalizado");
 
             order.Status = Models.OrderStatus.Canceled;

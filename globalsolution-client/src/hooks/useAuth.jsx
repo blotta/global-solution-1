@@ -1,35 +1,47 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import authService from '../services/auth.service'
+import jwtDecode from "jwt-decode";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useLocalStorage("user", null);
   const [token, setToken] = useLocalStorage("token", null);
-  const [isManager, setIsManager] = useLocalStorage("isManager", false);
   const navigate = useNavigate();
 
-  const checkManager = (roles) => {
-    console.log("checkManager", roles);
-    if (!roles) return false;
+  useEffect(() => {
+    if (token == null) {
+      return;
+    }
+
+    if (jwtDecode(token).exp * 1000 < new Date()) {
+      logout();
+    }
+  }, [])
+
+  const managerCheck = useMemo(() => {
+    if (token == null) return false;
+    const u = jwtDecode(token);
+
+    if (!u.roles) return false;
 
     let _roles;
 
-    if (typeof roles == "string") {
-      _roles = [roles]
+    if (typeof u.roles == "string") {
+      _roles = [u.roles]
     } else {
-      _roles = [...roles];
+      _roles = [...u.roles];
     }
-    console.log("_roles", _roles);
+    // const ismgr =  _roles.filter(r => ["Admin", "Manager"].includes(r)).length > 0;
+    // console.log("_roles", _roles, "ismgr", ismgr);
 
     return _roles.filter(r => ["Admin", "Manager"].includes(r)).length > 0;
-  }
+  }, [token])
 
   const signup = async (name, email, password) => {
     const result = await authService.signupEmailPassword(name, email, password);
-    console.log("result:", result);
     if (result == false) {
         console.log('invalid signup');
         return false;
@@ -40,15 +52,12 @@ export const AuthProvider = ({ children }) => {
   // call this function when you want to authenticate the user
   const login = async (email, password) => {
     const result = await authService.signinEmailPassword(email, password)
-    console.log("result:", result);
     if (result == null) {
         console.log('invalid login');
         return;
     }
     setUser(result.user);
     setToken(result.token);
-    setIsManager(checkManager(result.user.roles));
-    console.log('logging in from useAuth. Manager', result.user, checkManager(result.user.roles));
     navigate("/");
   };
 
@@ -56,7 +65,6 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
-    setIsManager(false);
     navigate("/signin", { replace: true });
   };
 
@@ -64,7 +72,7 @@ export const AuthProvider = ({ children }) => {
     () => ({
       user,
       token,
-      isManager,
+      managerCheck,
       signup,
       login,
       logout

@@ -73,7 +73,7 @@ export const useOrders = () => {
 
   const deleteOrder = async (orderId) => {
     try {
-      await axios.delete(`/profile/order/${orderId}`, {
+      await axios.delete(`/orders/${orderId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { DataGrid, GridActionsCellItem, GridDeleteIcon } from '@mui/x-data-grid';
-// import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 
 
 export default function AddressList({ addresses, deleteAddress }) {

@@ -7,7 +7,6 @@ export const useProfile = () => {
   const [loading, setLoading] = useState(true);
   const {token} = useAuth();
   const [refresh, setRefresh] = useState(0);
-  console.log(profile);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -21,6 +20,9 @@ export const useProfile = () => {
         setProfile(response.data);
       } catch (error) {
         console.error(error);
+        if (error.response == 401) {
+          
+        }
       } finally {
         setLoading(false);
       }
